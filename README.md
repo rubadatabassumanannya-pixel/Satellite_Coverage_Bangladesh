@@ -1,10 +1,40 @@
 # 🛰️ Satellite Constellation Simulation
 
-A Python-based satellite constellation simulator that models real-world orbital mechanics, coverage analysis, and signal propagation — with an interactive GUI, 3D Earth globe, live TLE data from Celestrak, and analytics dashboard.
+> A Python-based satellite constellation simulator modelling real-world orbital mechanics, coverage analysis, and signal propagation — with an interactive GUI, 3D Earth globe, live TLE data from Celestrak, and a full analytics dashboard.
+
+[![Python](https://img.shields.io/badge/Python-3.8+-blue?style=flat-square&logo=python)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Celestrak](https://img.shields.io/badge/TLE_Data-Celestrak-orange?style=flat-square)](https://celestrak.org)
 
 ---
 
-## 📸 Features at a Glance
+## 🌍 Demo
+
+### Basic Coverage Map
+![Basic 2D satellite coverage map showing 6 satellites over a world map with Bangladesh marked](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/coverage_map.png)
+
+### Advanced Animated Simulation
+![Animated satellite constellation with tilted orbits, coverage circles, and Bangladesh coverage checker](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/advanced_sim.png)
+
+---
+
+## 🖥️ Pro GUI — Full Simulation
+
+### 3D Earth Globe Tab
+![3D Earth globe with satellites, inter-satellite links, and real-time orbit visualization](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/globe_3d.png)
+
+### 2D Map Tab
+![2D world map showing satellite coverage circles, ISL mesh, and handover line to Bangladesh](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/map_2d.png)
+
+### Analytics Tab
+![Analytics dashboard showing coverage timeline, round-trip latency chart, and received signal power](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/analytics.png)
+
+### Coverage Heatmap Tab
+![Global coverage heatmap showing fraction of time each region on Earth is covered](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/heatmap.png)
+
+---
+
+## ✨ Features
 
 | Feature | Description |
 |---|---|
@@ -12,9 +42,9 @@ A Python-based satellite constellation simulator that models real-world orbital 
 | 🛰️ Real TLE Data | Fetches live Starlink / ISS / OneWeb orbits from Celestrak via SGP4 |
 | 🔗 Inter-Satellite Links | Each satellite connects to its 2 nearest neighbours in real-time |
 | 🤝 Handover Simulation | Tracks which satellite serves Bangladesh at every frame |
-| 🔥 Coverage Heatmap | Global grid showing what fraction of time each region is covered |
+| 🔥 Coverage Heatmap | Global grid showing fraction of time each region is covered |
 | 📡 Latency & Signal | Round-trip latency (ms) and Rx power (dBW) via Free Space Path Loss |
-| 📊 Export to Excel | One-click export of per-frame log: time, coverage, latency, signal quality |
+| 📊 Export to Excel | One-click export of per-frame log with time, coverage, latency, signal quality |
 | ⏱️ Real-time Clock Sync | UTC time + SGP4 propagation for true current satellite positions |
 | 🖥️ Interactive GUI | Tkinter GUI with 4 tabbed panels, speed slider, toggles, source selector |
 
@@ -23,15 +53,24 @@ A Python-based satellite constellation simulator that models real-world orbital 
 ## 🗂️ Project Structure
 
 ```
-satellite-constellation-sim/
+Satellite_Coverage_Bangladesh/
 │
 ├── satellite_sim_pro.py              # Full advanced simulation (main app)
 ├── satellite_simulation_advanced.py  # Intermediate: animation + 4 features
 ├── satellite_coverage.py             # Basic: static 2D coverage map
 │
-├── requirements.txt                  # All Python dependencies
-├── .gitignore                        # Excludes cache, outputs, venv
-└── README.md                         # This file
+├── images/                           # Screenshots for README
+│   ├── coverage_map.png
+│   ├── advanced_sim.png
+│   ├── globe_3d.png
+│   ├── map_2d.png
+│   ├── analytics.png
+│   └── heatmap.png
+│
+├── requirements.txt
+├── .gitignore
+├── setup_github.py
+└── README.md
 ```
 
 ---
@@ -41,8 +80,8 @@ satellite-constellation-sim/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/satellite-constellation-sim.git
-cd satellite-constellation-sim
+git clone https://github.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh.git
+cd Satellite_Coverage_Bangladesh
 ```
 
 ### 2. Create a virtual environment (recommended)
@@ -91,20 +130,11 @@ python satellite_coverage.py
 | `cartopy` | Geopolitical map rendering (optional) |
 | `Pillow` | Image utilities |
 
-> **Note:** `cartopy` is optional. The simulation falls back to a plain matplotlib map if it is not installed. `sgp4` is optional too — a Keplerian fallback runs automatically.
+> `cartopy` and `sgp4` are optional — the simulation falls back gracefully without them.
 
 ---
 
-## 🖥️ GUI Overview
-
-The main app (`satellite_sim_pro.py`) has four tabs:
-
-- **🌍 3D Globe** — Satellites orbit a 3D Earth sphere. ISL links connect nearest neighbours. The serving satellite for Bangladesh is highlighted in green.
-- **🗺️ 2D Map** — Cartopy (or plain matplotlib) map with coverage circles, ISL lines, and a dashed handover line to Bangladesh.
-- **📈 Analytics** — Live charts for coverage timeline, round-trip latency, and received signal power.
-- **🔥 Heatmap** — Accumulates coverage over time across a global lat/lon grid.
-
-### Controls
+## 🖥️ GUI Controls
 
 | Control | Function |
 |---|---|
@@ -124,37 +154,22 @@ The main app (`satellite_sim_pro.py`) has four tabs:
 ## 🔭 Physics & Models
 
 ### Orbital Propagation
-- **SGP4** (Simplified General Perturbations) via the `sgp4` library when TLE data is available
+- **SGP4** via the `sgp4` library when TLE data is available
 - **Keplerian circular orbit** as fallback for multi-shell constellation
 
 ### Coverage
-- Ground coverage radius calculated from satellite altitude and field-of-view half-angle:
-
 ```
-R_coverage = (R_earth + altitude) × sin(FOV/2)
+R_coverage = (R_earth + altitude) × sin(FOV / 2)
 ```
 
 ### Signal Model
-- **Free Space Path Loss (FSPL):**
-
 ```
-FSPL (dB) = 20 × log10(4π × d / λ)
-```
-
-- **Received power:**
-
-```
-Rx (dBW) = Tx_power + Antenna_gain − FSPL
-```
-
-- **Round-trip latency:**
-
-```
-RTT (ms) = 2 × slant_range / speed_of_light × 1000
+FSPL (dB)  = 20 × log10(4π × d / λ)
+Rx (dBW)   = Tx_power + Antenna_gain − FSPL
+RTT (ms)   = 2 × slant_range / speed_of_light × 1000
 ```
 
 ### Multi-Shell Constellation (fallback)
-Three orbital shells modelled when TLE is unavailable:
 
 | Shell | Altitude | Inclination | Satellites |
 |---|---|---|---|
@@ -165,8 +180,6 @@ Three orbital shells modelled when TLE is unavailable:
 ---
 
 ## 📊 Excel Export Format
-
-Each row in the exported `.xlsx` file contains:
 
 | Column | Description |
 |---|---|
@@ -192,8 +205,6 @@ Live TLE data is fetched from [Celestrak](https://celestrak.org):
 
 ## 🧭 Roadmap
 
-Planned future upgrades:
-
 - [ ] 3D textured Earth (NASA Blue Marble)
 - [ ] Satellite orbit trail paths
 - [ ] Day/Night terminator line
@@ -209,7 +220,7 @@ Planned future upgrades:
 
 ## 🤝 Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Pull requests are welcome. For major changes, open an issue first.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/your-feature`)
@@ -221,36 +232,14 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## 📄 License
 
-This project is licensed under the MIT License — see below.
-
-```
-MIT License
-
-Copyright (c) 2026
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+MIT License — free to use, modify, and distribute.
 
 ---
 
 ## 👤 Author
 
-Built with Python, orbital mechanics, and a lot of curiosity about space.
+**rubadatabassumanannya-pixel**
 
-> Target location: Bangladesh (23.685°N, 90.356°E)
+Built with Python, orbital mechanics, and curiosity about space.
+
+> 🎯 Target location: Bangladesh (23.685°N, 90.356°E)

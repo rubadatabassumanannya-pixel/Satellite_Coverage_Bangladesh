@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Satellite Sim Live Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+  :root{--bg:#030712;--panel:#0d1b2a;--border:#1e3a5f;--accent:#00d4ff;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--text:#e2e8f0;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;}
+  header{background:linear-gradient(90deg,#030712,#0d1b2a,#030712);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px;}
+  header h1{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--accent);letter-spacing:3px;}
+  .dot{width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.5s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;padding:16px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative;overflow:hidden;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);}
+  .card h2{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:2px;color:var(--accent);margin-bottom:12px;text-transform:uppercase;}
+  .big{font-size:2rem;font-weight:700;color:var(--accent);}
+  .label{font-size:.7rem;color:#64748b;margin-top:2px;}
+  .row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #0f2035;}
+  .row:last-child{border:none;}
+  .tag{padding:2px 8px;border-radius:4px;font-size:.65rem;}
+  .tag.ok{background:#052e16;color:var(--green);border:1px solid var(--green);}
+  .tag.err{background:#2d0a0a;color:var(--red);border:1px solid var(--red);}
+  .bar-wrap{height:8px;background:#0f2035;border-radius:4px;overflow:hidden;margin-top:6px;}
+  .bar{height:100%;border-radius:4px;transition:width .4s;}
+  #cov-timeline{display:flex;gap:2px;height:40px;align-items:flex-end;}
+  .tb{flex:1;min-width:3px;border-radius:2px 2px 0 0;}
+  table{width:100%;font-size:.7rem;border-collapse:collapse;}
+  td,th{padding:4px 6px;border-bottom:1px solid #0f2035;text-align:left;}
+  th{color:var(--accent);font-size:.6rem;}
+  .cw{color:var(--red);}
+  footer{text-align:center;padding:12px;color:#1e3a5f;font-size:.65rem;}
+  #ws-status{margin-left:auto;color:#64748b;font-size:.75rem;}
+</style>
+</head>
+<body>
+<header>
+  <div class="dot"></div>
+  <h1>SATELLITE CONSTELLATION LIVE DASHBOARD</h1>
+  <span id="ws-status">Connecting...</span>
+</header>
+<div class="grid">
+  <div class="card">
+    <h2>Coverage Status</h2>
+    <div class="big" id="cov-pct">--</div>
+    <div class="label">Bangladesh coverage %</div>
+    <div style="margin-top:10px" id="cov-tag"></div>
+    <div class="bar-wrap"><div class="bar" id="cov-bar" style="background:var(--green);width:0%"></div></div>
+  </div>
+  <div class="card">
+    <h2>Serving Satellite</h2>
+    <div class="big" style="font-size:1rem" id="srv-sat">--</div>
+    <div style="margin-top:8px">
+      <div class="row"><span>Latency</span><span id="latency">--</span></div>
+      <div class="row"><span>Rx Power</span><span id="rxpwr">--</span></div>
+      <div class="row"><span>SNR</span><span id="snr">--</span></div>
+      <div class="row"><span>Capacity</span><span id="cap">--</span></div>
+      <div class="row"><span>Doppler</span><span id="doppler">--</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Eclipse and Drag</h2>
+    <div class="row"><span>Eclipse</span><span id="eclipse">--</span></div>
+    <div class="row"><span>Orbit Decay</span><span id="decay">--</span></div>
+    <div class="row"><span>Serving Alt</span><span id="alt-srv">--</span></div>
+    <div class="row"><span>Shadow Frac</span><span id="shad-frac">--</span></div>
+  </div>
+  <div class="card">
+    <h2>Conjunction Alerts</h2>
+    <div id="conj-list"><span style="color:#64748b">No warnings</span></div>
+  </div>
+  <div class="card" style="grid-column:span 2">
+    <h2>Coverage Timeline</h2>
+    <div id="cov-timeline"></div>
+  </div>
+  <div class="card">
+    <h2>Ground Stations</h2>
+    <table><thead><tr><th>Station</th><th>Cov</th><th>Latency</th></tr></thead>
+    <tbody id="gs-table"></tbody></table>
+  </div>
+  <div class="card">
+    <h2>Link Budget</h2>
+    <table><thead><tr><th>Param</th><th>Value</th></tr></thead>
+    <tbody id="lb-table"></tbody></table>
+  </div>
+</div>
+<footer>WebSocket: ws://localhost:8765 | Updates every 500ms</footer>
+<script>
+const hist=[];
+function connect(){
+  const ws=new WebSocket("ws://localhost:8765");
+  ws.onopen=()=>{ document.getElementById('ws-status').textContent='Connected'; };
+  ws.onclose=()=>{ document.getElementById('ws-status').textContent='Reconnecting...'; setTimeout(connect,2000); };
+  ws.onerror=()=>{ document.getElementById('ws-status').textContent='Error'; };
+  ws.onmessage=e=>{
+    const d=JSON.parse(e.data);
+    const pct=d.cov_pct||0;
+    document.getElementById('cov-pct').textContent=pct.toFixed(1)+'%';
+    document.getElementById('cov-bar').style.width=pct+'%';
+    document.getElementById('cov-tag').innerHTML=d.covered?'<span class="tag ok">COVERED</span>':'<span class="tag err">NOT COVERED</span>';
+    document.getElementById('srv-sat').textContent=d.serving||'None';
+    document.getElementById('latency').textContent=d.latency?d.latency.toFixed(1)+' ms':'--';
+    document.getElementById('rxpwr').textContent=d.rx_dbw!=null?d.rx_dbw+' dBW':'--';
+    document.getElementById('snr').textContent=d.snr_db!=null?d.snr_db+' dB':'--';
+    document.getElementById('cap').textContent=d.capacity_mbps!=null?d.capacity_mbps+' Mbps':'--';
+    document.getElementById('doppler').textContent=d.doppler_hz!=null?d.doppler_hz.toFixed(0)+' Hz':'--';
+    document.getElementById('eclipse').innerHTML=d.eclipse?'<span class="tag err">IN SHADOW</span>':'<span class="tag ok">SUNLIT</span>';
+    document.getElementById('decay').textContent=d.drag_km_day!=null?d.drag_km_day.toFixed(5)+' km/day':'--';
+    document.getElementById('alt-srv').textContent=d.serving_alt?d.serving_alt.toFixed(1)+' km':'--';
+    document.getElementById('shad-frac').textContent=d.shadow_frac!=null?(d.shadow_frac*100).toFixed(1)+'%':'--';
+    const cl=document.getElementById('conj-list');
+    cl.innerHTML=(d.conjunctions&&d.conjunctions.length)
+      ?d.conjunctions.map(c=>`<div class="row cw">SAT-${c[0]} and SAT-${c[1]}: ${c[2]} km</div>`).join('')
+      :'<span style="color:#64748b">No warnings</span>';
+    hist.push(d.covered?1:0);
+    if(hist.length>80)hist.shift();
+    document.getElementById('cov-timeline').innerHTML=hist.map(v=>
+      `<div class="tb" style="height:${v?100:20}%;background:${v?'var(--green)':'var(--red)'}"></div>`).join('');
+    if(d.ground_stations)
+      document.getElementById('gs-table').innerHTML=d.ground_stations.map(g=>
+        `<tr><td>${g.name}</td><td>${g.covered?'<span class="tag ok">Y</span>':'<span class="tag err">N</span>'}</td><td>${g.latency?g.latency.toFixed(0)+' ms':'--'}</td></tr>`).join('');
+    if(d.link_budget)
+      document.getElementById('lb-table').innerHTML=Object.entries(d.link_budget).map(([k,v])=>
+        `<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  };
+}
+connect();
+</script>
+</body>
+</html>

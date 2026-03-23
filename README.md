@@ -12,51 +12,54 @@
 ## 🌍 Demo
 
 ### Basic Coverage Map
-![coverage_map](images/coverage_map.png)
+![coverage_map](coverage_map.png)
 
 ### Advanced Animated Simulation
-![advanced_sim](images/advanced-sim.png)
+![advanced_sim](advanced_sim.png)
+
+### Satellite Coverage Advanced
+![satellite_coverage_advanced](satellite_coverage_advanced.png)
 
 ---
 
 ## 🖥️ Pro GUI — Full Simulation
 
 ### Initial 2D Map (on launch)
-![initial_2d_map](images/initial_2d-map.png)
+![initial_2d_map](initial_2d_map.png)
 
 ### 2D Map Tab (running)
-![2d_map](images/2d_map.png)
+![2d_map](2d_map.png)
 
 ### 3D Globe Tab
-![3d_glob](images/3d_glob.png)
+![3d_glob](3d_glob.png)
 
 ### 3D Model View
-![3d_model](images/3d_model.png)
+![3d_model](3d_model.png)
 
 ### Initial Analytics (on launch)
-![initial_analytics](images/initial-analytics_png.png)
+![initial_analytics](initial-analytics.png)
 
 ### Analytics Dashboard (running)
-![analytics](images/analytics.png)
+![analytics](analytics.png)
 
 ---
 
 ## 📊 Data & Reports
 
 ### Coverage Heatmap
-![heatmap](images/heatmap_png.png)
+![heatmap](heatmap.png)
 
 ### Simulation Log
-![simulation_log](images/simulation_log.png)
+![simulation_log](simulation_log.png)
 
 ### Link Budget Result
-![link_budget](images/link_budget_result.png)
+![link_budget](link_budget_result.png)
 
 ### Constellation Optimizer Result
-![optimizer](images/constellation_optimizer_result.png)
+![optimizer](constellation_optimizer_result.png)
 
 ### Conjunction Reports
-![conjunction](images/conjunction_reports.png)
+![conjunction](conjuction_reports.png)
 
 ---
 
@@ -84,28 +87,26 @@
 ```
 Satellite_Coverage_Bangladesh/
 │
-├── satellite_sim_pro.py              # Full advanced simulation (main app)
-├── satellite_simulation_advanced.py  # Intermediate: animation + 4 features
-├── satellite_coverage.py             # Basic: static 2D coverage map
+├── satellite_simulation_pro.py          # Full advanced simulation (main app)
+├── Satellite_coverage_advanced.py       # Intermediate animated simulation
+├── constellar_Coverage.py               # Basic static coverage map
+├── dashboard.html                        # Web dashboard
 │
-├── images/
-│   ├── coverage_map.png
-│   ├── advanced-sim.png
-│   ├── initial_2d-map.png
-│   ├── 2d_map.png
-│   ├── 3d_glob.png
-│   ├── 3d_model.png
-│   ├── initial-analytics_png.png
-│   ├── analytics.png
-│   ├── heatmap_png.png
-│   ├── simulation_log.png
-│   ├── link_budget_result.png
-│   ├── constellation_optimizer_result.png
-│   └── conjunction_reports.png
+├── coverage_map.png
+├── advanced_sim.png
+├── satellite_coverage_advanced.png
+├── initial_2d_map.png
+├── 2d_map.png
+├── 3d_glob.png
+├── 3d_model.png
+├── initial-analytics.png
+├── analytics.png
+├── heatmap.png
+├── simulation_log.png
+├── link_budget_result.png
+├── constellation_optimizer_result.png
+├── conjuction_reports.png
 │
-├── requirements.txt
-├── .gitignore
-├── setup_github.py
 └── README.md
 ```
 
@@ -142,13 +143,13 @@ pip install -r requirements.txt
 
 ```bash
 # Full advanced GUI (recommended)
-python satellite_sim_pro.py
+python satellite_simulation_pro.py
 
 # Intermediate animated version
-python satellite_simulation_advanced.py
+python Satellite_coverage_advanced.py
 
 # Basic static coverage map
-python satellite_coverage.py
+python constellar_Coverage.py
 ```
 
 ---

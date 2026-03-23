@@ -5,32 +5,58 @@
 [![Python](https://img.shields.io/badge/Python-3.8+-blue?style=flat-square&logo=python)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![Celestrak](https://img.shields.io/badge/TLE_Data-Celestrak-orange?style=flat-square)](https://celestrak.org)
+[![SGP4](https://img.shields.io/badge/Propagator-SGP4-purple?style=flat-square)](https://pypi.org/project/sgp4/)
 
 ---
 
 ## 🌍 Demo
 
 ### Basic Coverage Map
-![Basic 2D satellite coverage map showing 6 satellites over a world map with Bangladesh marked](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/coverage_map.png)
+![Basic 2D satellite coverage map showing satellites over a world map with Bangladesh marked](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/coverage_map.png)
 
 ### Advanced Animated Simulation
-![Animated satellite constellation with tilted orbits, coverage circles, and Bangladesh coverage checker](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/advanced_sim.png)
+![Animated satellite constellation with tilted orbits, coverage circles, and Bangladesh coverage checker](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/advanced-sim.png)
 
 ---
 
 ## 🖥️ Pro GUI — Full Simulation
 
-### 3D Earth Globe Tab
-![3D Earth globe with satellites, inter-satellite links, and real-time orbit visualization](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/globe_3d.png)
+### Initial 2D Map (on launch)
+![Initial 2D map view when the simulation first loads before animation starts](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/initial_2d-map.png)
 
-### 2D Map Tab
-![2D world map showing satellite coverage circles, ISL mesh, and handover line to Bangladesh](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/map_2d.png)
+### 2D Map Tab (running)
+![2D world map showing satellite coverage circles, ISL mesh network, and handover line to Bangladesh](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/2d_map.png)
 
-### Analytics Tab
+### 3D Globe Tab
+![3D Earth globe with satellites orbiting, inter-satellite links, and real-time position tracking](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/3d_glob.png)
+
+### 3D Model View
+![Detailed 3D model visualization of the satellite constellation around Earth](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/3d_model.png)
+
+### Initial Analytics (on launch)
+![Initial analytics panel state when the simulation first opens before data is collected](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/initial-analytics_png.png)
+
+### Analytics Dashboard (running)
 ![Analytics dashboard showing coverage timeline, round-trip latency chart, and received signal power](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/analytics.png)
 
-### Coverage Heatmap Tab
-![Global coverage heatmap showing fraction of time each region on Earth is covered](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/heatmap.png)
+---
+
+## 📊 Data & Reports
+
+### Coverage Heatmap
+![Global coverage heatmap showing fraction of time each region on Earth is covered by the constellation](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/heatmap_png.png)
+
+### Simulation Log
+![Simulation log showing per-frame coverage data, serving satellite, latency and signal quality](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/simulation_log.png)
+
+### Link Budget Result
+![Link budget calculator output showing FSPL, received power, and signal quality metrics](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/link_budget_result.png)
+
+### Constellation Optimizer Result
+![Constellation optimizer output showing best coverage configuration for Bangladesh](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/constellation_optimizer_result.png)
+
+### Conjunction Reports
+![Conjunction analysis report showing close approach warnings between satellites](https://raw.githubusercontent.com/rubadatabassumanannya-pixel/Satellite_Coverage_Bangladesh/main/images/conjunction_reports.png)
 
 ---
 
@@ -44,6 +70,9 @@
 | 🤝 Handover Simulation | Tracks which satellite serves Bangladesh at every frame |
 | 🔥 Coverage Heatmap | Global grid showing fraction of time each region is covered |
 | 📡 Latency & Signal | Round-trip latency (ms) and Rx power (dBW) via Free Space Path Loss |
+| 🔗 Link Budget Calculator | Full RF chain analysis: FSPL, Tx power, antenna gain, Rx quality |
+| 🏆 Constellation Optimizer | Finds best satellite configuration for maximum Bangladesh coverage |
+| ⚠️ Conjunction Analysis | Close approach warnings and collision avoidance reporting |
 | 📊 Export to Excel | One-click export of per-frame log with time, coverage, latency, signal quality |
 | ⏱️ Real-time Clock Sync | UTC time + SGP4 propagation for true current satellite positions |
 | 🖥️ Interactive GUI | Tkinter GUI with 4 tabbed panels, speed slider, toggles, source selector |
@@ -59,13 +88,20 @@ Satellite_Coverage_Bangladesh/
 ├── satellite_simulation_advanced.py  # Intermediate: animation + 4 features
 ├── satellite_coverage.py             # Basic: static 2D coverage map
 │
-├── images/                           # Screenshots for README
-│   ├── coverage_map.png
-│   ├── advanced_sim.png
-│   ├── globe_3d.png
-│   ├── map_2d.png
-│   ├── analytics.png
-│   └── heatmap.png
+├── images/                           # Screenshots
+│   ├── coverage_map.png              # Basic coverage map
+│   ├── advanced-sim.png              # Animated simulation
+│   ├── initial_2d-map.png            # 2D map on launch
+│   ├── 2d_map.png                    # 2D Cartopy map tab (running)
+│   ├── 3d_glob.png                   # 3D globe tab
+│   ├── 3d_model.png                  # 3D model view
+│   ├── initial-analytics_png.png     # Analytics panel on launch
+│   ├── analytics.png                 # Analytics dashboard (running)
+│   ├── heatmap_png.png               # Coverage heatmap
+│   ├── simulation_log.png            # Exported simulation log
+│   ├── link_budget_result.png        # Link budget output
+│   ├── constellation_optimizer_result.png  # Optimizer output
+│   └── conjunction_reports.png       # Conjunction analysis
 │
 ├── requirements.txt
 ├── .gitignore
@@ -162,12 +198,21 @@ python satellite_coverage.py
 R_coverage = (R_earth + altitude) × sin(FOV / 2)
 ```
 
-### Signal Model
+### Signal & Link Budget
 ```
 FSPL (dB)  = 20 × log10(4π × d / λ)
 Rx (dBW)   = Tx_power + Antenna_gain − FSPL
 RTT (ms)   = 2 × slant_range / speed_of_light × 1000
 ```
+
+### Signal Quality Thresholds
+
+| Rx Power | Quality |
+|---|---|
+| > −100 dBW | Excellent |
+| −100 to −110 dBW | Good |
+| −110 to −120 dBW | Fair |
+| < −120 dBW | Weak |
 
 ### Multi-Shell Constellation (fallback)
 
@@ -212,7 +257,6 @@ Live TLE data is fetched from [Celestrak](https://celestrak.org):
 - [ ] Eclipse detection (satellite in Earth's shadow)
 - [ ] Atmospheric drag / orbit decay model
 - [ ] Ground station network (multiple cities)
-- [ ] Link budget calculator (full RF chain)
 - [ ] WebSocket live dashboard (browser-based)
 - [ ] Save animation as MP4/GIF
 
